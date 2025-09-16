@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crimson Archives - Gothic Vampire Sanctuary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@300;400;600&family=Creepster&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary-bg: #0a0a0a;
+            --secondary-bg: #1a1a1a;
+            --accent-color: #8b0000;
+            --text-primary: #e5e5e5;
+            --text-secondary: #b0b0b0;
+            --border-color: #333;
+        }
+
+        .blood-theme {
+            --primary-bg: #8b0000;
+            --secondary-bg: #660000;
+            --accent-color: #000;
+            --text-primary: #000;
+            --text-secondary: #333;
+            --border-color: #000;
+        }
+
+        * {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="%23e5e5e5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>'), auto;
+        }
+
+        .blood-theme * {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="%23000"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>'), auto;
+        }
+
+        body {
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            font-family: 'Cinzel', serif;
+            overflow-x: hidden;
+        }
+
+        .gothic-bg {
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            position: relative;
+        }
+
+        .gothic-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/></filter></defs><rect width="100%" height="100%" filter="url(%23noiseFilter)" opacity="0.1"/></svg>');
+            pointer-events: none;
+        }
+
+        .fog-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(255,255,255,0.05) 70%, rgba(255,255,255,0.1) 100%);
+            animation: fogMove 20s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes fogMove {
+            0%, 100% { transform: translateX(-10px) translateY(-5px); }
+            50% { transform: translateX(10px) translateY(5px); }
+        }
+
+        .blood-drop {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        .gothic-border {
+            border: 2px solid var(--border-color);
+            border-image: linear-gradient(45deg, var(--accent-color), transparent, var(--accent-color)) 1;
+        }
+
+        .hover-blood:hover {
+            background: var(--accent-color) !important;
+            color: var(--text-primary) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 0, 0, 0.4);
+        }
+
+        .modal {
+            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .castle-bg {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600"><rect fill="%23000" width="800" height="600"/><polygon fill="%23111" points="100,500 150,400 200,450 250,350 300,400 350,300 400,350 450,250 500,300 550,200 600,250 650,150 700,200 750,100 800,150 800,600 0,600"/><circle fill="%23222" cx="200" cy="100" r="30"/><circle fill="%23222" cx="400" cy="80" r="25"/><circle fill="%23222" cx="600" cy="120" r="35"/></svg>');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .scroll-smooth {
+            scroll-behavior: smooth;
+        }
+
+        .digital-clock {
+            font-family: 'Creepster', cursive;
+            text-shadow: 0 0 20px var(--accent-color);
+        }
+
+        .gallery-item {
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05) rotateY(5deg);
+            box-shadow: 0 15px 35px rgba(139, 0, 0, 0.5);
+        }
+
+        .contact-icon {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .nav-link {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: var(--accent-color);
+            transition: left 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            left: 0;
+        }
+
+        .file-upload-area {
+            border: 2px dashed var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--accent-color);
+            background: rgba(139, 0, 0, 0.1);
+        }
+
+        .social-icon {
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            transform: scale(1.2) rotate(10deg);
+            filter: drop-shadow(0 0 10px var(--accent-color));
+        }
+    </style>
+</head>
+<body class="gothic-bg scroll-smooth">
+    <!-- Fixed Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-black bg-opacity-90 backdrop-blur-sm border-b border-red-900">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-bold" style="font-family: 'Cinzel Decorative', cursive; color: var(--accent-color);">
+                    🦇 Crimson Archives
+                </h1>
+                <div class="flex space-x-6">
+                    <a href="#home" class="nav-link px-3 py-2 hover-blood transition-all duration-300">Home</a>
+                    <a href="#lore" class="nav-link px-3 py-2 hover-blood transition-all duration-300">Lore</a>
+                    <a href="#library" class="nav-link px-3 py-2 hover-blood transition-all duration-300">Library</a>
+                    <a href="#archive" class="nav-link px-3 py-2 hover-blood transition-all duration-300">Archive</a>
+                    <a href="#contact" class="nav-link px-3 py-2 hover-blood transition-all duration-300">Contact</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <input type="text" id="searchBar" placeholder="Search the darkness..." 
+                           class="px-4 py-2 bg-gray-900 border border-red-900 rounded text-white placeholder-gray-400 focus:outline-none focus:border-red-600">
+                    <button id="themeToggle" class="blood-drop text-2xl hover:scale-110 transition-transform">🩸</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home" class="min-h-screen castle-bg flex items-center justify-center relative">
+        <div class="fog-effect"></div>
+        <div class="text-center z-10">
+            <h1 class="text-6xl md:text-8xl font-bold mb-8" style="font-family: 'Cinzel Decorative', cursive; color: var(--accent-color); text-shadow: 0 0 30px rgba(139, 0, 0, 0.8);">
+                Welcome to Eternity
+            </h1>
+            <p class="text-xl md:text-2xl mb-12 max-w-2xl mx-auto" style="color: var(--text-secondary);">
+                Enter the realm where shadows dance and ancient secrets whisper through the corridors of time
+            </p>
+            <div class="digital-clock text-4xl md:text-6xl mb-8" id="digitalClock"></div>
+            <div class="text-lg" id="digitalDate"></div>
+        </div>
+    </section>
+
+    <!-- Lore Section -->
+    <section id="lore" class="py-20 px-6">
+        <div class="container mx-auto">
+            <h2 class="text-5xl font-bold text-center mb-16" style="font-family: 'Cinzel Decorative', cursive; color: var(--accent-color);">
+                Ancient Lore
+            </h2>
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="gothic-border p-8 bg-gray-900 bg-opacity-50">
+                    <div class="text-6xl mb-4 text-center">🧛‍♂️</div>
+                    <h3 class="text-3xl font-bold mb-4" style="color: var(--accent-color);">Count Dracula</h3>
+                    <p class="text-lg leading-relaxed" style="color: var(--text-secondary);">
+                        The most infamous of all vampires, Count Dracula emerged from the mists of Transylvania to become the archetypal lord of the undead. Born from Bram Stoker's imagination yet rooted in ancient folklore, Dracula represents the eternal struggle between civilization and primal darkness. His castle stands as a monument to centuries of supernatural power, where time itself bends to his immortal will.
+                    </p>
+                </div>
+                <div class="gothic-border p-8 bg-gray-900 bg-opacity-50">
+                    <div class="text-6xl mb-4 text-center">🦇</div>
+                    <h3 class="text-3xl font-bold mb-4" style="color: var(--accent-color);">Nosferatu</h3>
+                    <p class="text-lg leading-relaxed" style="color: var(--text-secondary);">
+                        Count Orlok, known as Nosferatu, embodies the more grotesque and terrifying aspects of vampirism. Unlike his more charismatic counterparts, Nosferatu represents pure horror - a plague-bringing creature of the night whose very presence brings death and decay. His elongated fingers and rat-like features serve as a reminder that not all monsters hide behind beautiful facades.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Library Section -->
+    <section id="library" class="py-20 px-6 bg-gray-900 bg-opacity-30">
+        <div class="container mx-auto">
+            <h2 class="text-5xl font-bold text-center mb-16" style="font-family: 'Cinzel Decorative', cursive; color: var(--accent-color);">
+                Forbidden Library
+            </h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="gallery-item gothic-border p-6 bg-black bg-opacity-50 cursor-pointer" onclick="openModal('story1')">
+                    <div class="text-4xl mb-4 text-center">📚</div>
+                    <h3 class="text-xl font-bold mb-2" style="color: var(--accent-color);">The Midnight Covenant</h3>
+                    <p style="color: var(--text-secondary);">A tale of ancient pacts and blood oaths that bind souls across centuries...</p>
+                </div>
+                <div class="gallery-item gothic-border p-6 bg-black bg-opacity-50 cursor-pointer" onclick="openModal('story2')">
+                    <div class="text-4xl mb-4 text-center">🗡️</div>
+                    <h3 class="text-xl font-bold mb-2" style="color: var(--accent-color);">Crimson Chronicles</h3>
+                    <p style="color: var(--text-secondary);">Chronicles of vampire hunters and their eternal struggle against darkness...</p>
+                </div>
+                <div class="gallery-item gothic-border p-6 bg-black bg-opacity-50 cursor-pointer" onclick="openModal('story3')">
+                    <div class="text-4xl mb-4 text-center">🌙</div>
+                    <h3 class="text-xl font-bold mb-2" style="color: var(--accent-color);">Lunar Prophecies</h3>
+                    <p style="color: var(--text-secondary);">Ancient prophecies written in blood under the light of cursed moons...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Archive Section -->
+    <section id="archive" class="py-20 px-6">
+        <div class="container mx-auto">
+            <h2 class="text-5xl font-bold text-center mb-16" style="font-family: 'Cinzel Decorative', cursive; color: var(--accent-color);">
+                Digital Archive
+            </h2>
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="gothic-border p-8 bg-gray-900 bg-opacity-50">
+                    <h3 class="text-2xl font-bold mb-6" style="color: var(--accent-color);">Media Gallery</h3>
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="gallery-item bg-black bg-opacity-70 p-4 text-center cursor-pointer hover-blood">
+                            <div class="text-3xl mb-2">🖼️</div>
+                            <p>Gothic Portraits</p>
+                        </div>
+                        <div class="gallery-item bg-black bg-opacity-70 p-4 text-center cursor-pointer hover-blood">
+                            <div class="text-3xl mb-2">🎬</div>
+                            <p>Dark Cinema</p>
+                        </div>
+                    </div>
+                    <button class="w-full py-3 bg-red-900 hover:bg-red-800 transition-colors rounded">
+                        Browse Collection
+                    </button>
+                </div>
+                <div class="gothic-border p-8 bg-gray-900 bg-opacity-50">
+                    <h3 class="text-2xl font-bold mb-6" style="color: var(--accent-color);">Document Vault</h3>
+                    <div class="space-y-4 mb-6">
+                        <div class="flex justify-between items-center p-3 bg-black bg-opacity-50 rounded hover-blood cursor-pointer">
+                            <span>📜 Ancient Manuscripts</span>
+                            <span class="text-sm">Download</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-black bg-opacity-50 rounded hover-blood cursor-pointer">
+                            <span>📖 Grimoire Collection</span>
+                            <span class="text-sm">Download</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-black bg-opacity-50 rounded hover-blood cursor-pointer">
+                            <span>🗞️ Historical Records</span>
+                            <span class="text-sm">Download</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- File Upload Section -->
+            <div class="mt-12 gothic-border p-8 bg-gray-900 bg-opacity-50">
+                <h3 class="text-2xl font-bold mb-6" style="color: var(--accent-color);">Contribute to the Archive</h3>
+                <div class="file-upload-area p-8 text-center rounded-lg">
+                    <div class="text-4xl mb-4">📁</div>
+                    <p class="mb-4">Drag and drop your files here or click to browse</p>
+                    <input type="file" id="fileUpload" multiple class="hidden">
+                    <button onclick="document.getElementById('fileUpload').click()" 
+                            class="px-6 py-3 bg-red-900 hover:bg-red-800 transition-colors rounded">
+                        Choose Files
+                    </button>
+                </div>
+                <div class="mt-4">
+                    <input type="text" placeholder="File title..." 
+                           class="w-full px-4 py-2 bg-gray-800 border border-red-900 rounded text-white placeholder-gray-400">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 px-6 bg-gray-900 bg-opacity-30">
+        <div class="container mx-auto text-center">
+            <h2 class="text-5xl font-bold mb-16" style="font-family: 'Cinzel Decorative', cursive; color: var(--accent-color);">
+                Reach Into the Void
+            </h2>
+            <p class="text-xl mb-8" style="color: var(--text-secondary);">
+                Send your messages into the eternal darkness. We listen from beyond the veil.
+            </p>
+            <div class="max-w-md mx-auto gothic-border p-8 bg-black bg-opacity-50">
+                <form id="contactForm">
+                    <input type="text" placeholder="Your Name" required
+                           class="w-full mb-4 px-4 py-3 bg-gray-800 border border-red-900 rounded text-white placeholder-gray-400">
+                    <input type="email" placeholder="Your Email" required
+                           class="w-full mb-4 px-4 py-3 bg-gray-800 border border-red-900 rounded text-white placeholder-gray-400">
+                    <textarea placeholder="Your Message" rows="5" required
+                              class="w-full mb-6 px-4 py-3 bg-gray-800 border border-red-900 rounded text-white placeholder-gray-400 resize-none"></textarea>
+                    <button type="submit" class="w-full py-3 bg-red-900 hover:bg-red-800 transition-colors rounded hover-blood">
+                        Send to the Shadows
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 px-6 bg-black">
+        <div class="container mx-auto text-center">
+            <div class="flex justify-center space-x-8 mb-8">
+                <a href="#" class="social-icon text-3xl hover-blood">📘</a>
+                <a href="#" class="social-icon text-3xl hover-blood">🐦</a>
+                <a href="#" class="social-icon text-3xl hover-blood">📷</a>
+                <a href="#" class="social-icon text-3xl hover-blood">💼</a>
+            </div>
+            <p style="color: var(--text-secondary);">
+                © 2025 Crimson Archives. All rights reserved. | Embrace the darkness within.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Floating Contact Icon -->
+    <div class="contact-icon">
+        <button onclick="openContactModal()" 
+                class="w-16 h-16 bg-red-900 hover:bg-red-800 rounded-full flex items-center justify-center text-2xl hover-blood">
+            💬
+        </button>
+    </div>
+
+    <!-- Modal for Stories -->
+    <div id="storyModal" class="fixed inset-0 modal hidden items-center justify-center z-50">
+        <div class="bg-black bg-opacity-90 p-8 rounded-lg max-w-2xl mx-4 gothic-border">
+            <div class="flex justify-between items-center mb-6">
+                <h3 id="modalTitle" class="text-2xl font-bold" style="color: var(--accent-color);"></h3>
+                <button onclick="closeModal()" class="text-3xl hover-blood">&times;</button>
+            </div>
+            <div id="modalContent" class="mb-6" style="color: var(--text-secondary);"></div>
+            <div class="flex space-x-4">
+                <button class="px-6 py-2 bg-red-900 hover:bg-red-800 transition-colors rounded hover-blood">
+                    Share
+                </button>
+                <button class="px-6 py-2 bg-gray-700 hover:bg-gray-600 transition-colors rounded hover-blood">
+                    Download
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div id="contactModal" class="fixed inset-0 modal hidden items-center justify-center z-50">
+        <div class="bg-black bg-opacity-90 p-8 rounded-lg max-w-md mx-4 gothic-border">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold" style="color: var(--accent-color);">Quick Message</h3>
+                <button onclick="closeContactModal()" class="text-3xl hover-blood">&times;</button>
+            </div>
+            <form>
+                <input type="text" placeholder="Your Name" required
+                       class="w-full mb-4 px-4 py-3 bg-gray-800 border border-red-900 rounded text-white placeholder-gray-400">
+                <textarea placeholder="Your Message" rows="4" required
+                          class="w-full mb-6 px-4 py-3 bg-gray-800 border border-red-900 rounded text-white placeholder-gray-400 resize-none"></textarea>
+                <button type="submit" class="w-full py-3 bg-red-900 hover:bg-red-800 transition-colors rounded hover-blood">
+                    Send Message
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Digital Clock
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { 
+                hour12: false, 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit' 
+            });
+            const dateString = now.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            document.getElementById('digitalClock').textContent = timeString;
+            document.getElementById('digitalDate').textContent = dateString;
+        }
+        
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Theme Toggle
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('blood-theme');
+            localStorage.setItem('theme', document.body.classList.contains('blood-theme') ? 'blood' : 'default');
+        });
+
+        // Load saved theme
+        if (localStorage.getItem('theme') === 'blood') {
+            document.body.classList.add('blood-theme');
+        }
+
+        // Search functionality
+        document.getElementById('searchBar').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const sections = document.querySelectorAll('section');
+            
+            sections.forEach(section => {
+                const text = section.textContent.toLowerCase();
+                if (text.includes(searchTerm) || searchTerm === '') {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        });
+
+        // Modal functions
+        const stories = {
+            story1: {
+                title: "The Midnight Covenant",
+                content: "In the depths of the Carpathian Mountains, where ancient oaks whisper secrets older than civilization itself, there exists a covenant written in blood and sealed with souls. The Midnight Covenant speaks of thirteen vampires who gathered under a blood moon to forge an alliance that would span millennia. Each vampire brought with them a piece of their humanity, sacrificing it to the collective power that would make them nearly invincible. But power, as always, comes with a price. The covenant demands that every century, on the night of the blood moon, one of the thirteen must return to mortality, their immortal essence feeding the others. As the centuries passed, only three remain, and the next blood moon approaches..."
+            },
+            story2: {
+                title: "Crimson Chronicles",
+                content: "The Van Helsing lineage has hunted the undead for over four centuries, passing down knowledge, weapons, and an unbreakable oath from generation to generation. Each hunter carries a silver cross blessed by thirteen different faiths, a wooden stake carved from the Tree of Life, and most importantly, the Chronicle - a leather-bound tome that contains the true names, weaknesses, and locations of every vampire they've encountered. But the Chronicle holds a dark secret: it's written in the blood of vampires, and each entry binds the hunter's soul a little closer to the darkness they fight. The current keeper of the Chronicle, Elena Van Helsing, has begun to notice changes in herself - an aversion to sunlight, an unusual strength, and most disturbing of all, a growing thirst that water cannot quench..."
+            },
+            story3: {
+                title: "Lunar Prophecies",
+                content: "Carved into the walls of a forgotten monastery in the Romanian countryside, the Lunar Prophecies speak of a time when the moon itself will bleed, and the barrier between the world of the living and the realm of the undead will shatter like glass. The prophecies, written by a mad monk who claimed to receive visions from beyond the grave, detail seven signs that will herald this apocalyptic event. Six of the signs have already come to pass: the birth of twins under a solar eclipse, the discovery of a vampire's tomb beneath a church, the appearance of a comet with a crimson tail, the death of a saint, the resurrection of an ancient evil, and the gathering of the thirteen bloodlines. Only one sign remains: the willing sacrifice of a pure soul to save the world from eternal darkness. But in a world where purity is rare and sacrifice is rarer still, who will step forward when the final blood moon rises?"
+            }
+        };
+
+        function openModal(storyId) {
+            const modal = document.getElementById('storyModal');
+            const story = stories[storyId];
+            
+            document.getElementById('modalTitle').textContent = story.title;
+            document.getElementById('modalContent').textContent = story.content;
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('storyModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function openContactModal() {
+            const modal = document.getElementById('contactModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeContactModal() {
+            const modal = document.getElementById('contactModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // File upload handling
+        document.getElementById('fileUpload').addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            if (files.length > 0) {
+                alert(`Selected ${files.length} file(s) for upload to the archive.`);
+            }
+        });
+
+        // Form submissions
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Your message has been sent into the void. The shadows will carry your words to us.');
+            this.reset();
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function(e) {
+            const storyModal = document.getElementById('storyModal');
+            const contactModal = document.getElementById('contactModal');
+            
+            if (e.target === storyModal) {
+                closeModal();
+            }
+            if (e.target === contactModal) {
+                closeContactModal();
+            }
+        });
+
+        // Add some atmospheric effects
+        document.addEventListener('mousemove', function(e) {
+            const cursor = document.createElement('div');
+            cursor.className = 'fixed w-1 h-1 bg-red-500 rounded-full pointer-events-none z-50 opacity-50';
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            document.body.appendChild(cursor);
+            
+            setTimeout(() => {
+                cursor.remove();
+            }, 1000);
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98016c15d1677e63',t:'MTc1ODAzNjgwNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
